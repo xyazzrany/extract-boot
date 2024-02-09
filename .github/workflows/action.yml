@@ -23,7 +23,7 @@ jobs:
       run: sudo apt-get install aria2 unzip -y
 
     - name: Download ROM
-      run: aria2c -x 16 "${{ github.event.inputs.rom_url }}" -O rom.zip    
+      run: aria2c -x 16 "${{ github.event.inputs.rom_url }}" -o rom.zip    
 
 
     - name: Unzip ROM
