@@ -1,0 +1,51 @@
+name: demo
+
+on:
+  workflow_dispatch:
+    inputs:
+      rom_url:
+        description: 'ROM Dowload link'
+        required: true
+        default: ''
+
+jobs:
+  Extract boot:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      
+    - name: Download dependencies
+      run: sudo apt-get install aria2 unzip -y
+
+    - name: Download ROM
+      run: aria2c -x 16 "${{ github.event.inputs.rom_url }}" -O rom.zip    
+
+
+    - name: Unzip ROM
+      run: |
+        unzip rom.zip
+
+    - name: Extract boot
+      run: |
+        ./payload-dumper-go -p boot -o out payload.bin
+
+
+    - name: 提交信息
+      run: |
+        cd ${{ github.workspace }}
+        touch info.md
+        echo "提交日期：$(TZ=Asia/Shanghai date '+%Y-%m-%d %H:%M')" >> info.md
+
+
+    - name: Update Releases
+      uses: ncipollo/release-action@v1.12.0
+      with:
+          artifacts: out/*
+          bodyfile: "${{ github.workspace }}/info.md"
+          tag: "Boot_${{ github.run_id }}"
+          token: ${{ secrets.GITHUB_TOKEN }}
