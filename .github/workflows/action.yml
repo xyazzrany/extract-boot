@@ -9,7 +9,7 @@ on:
         default: 'Dowload link'
 
 jobs:
-  Extract boot:
+  Extract-boot:
     runs-on: ubuntu-latest
     permissions:
       contents: write
