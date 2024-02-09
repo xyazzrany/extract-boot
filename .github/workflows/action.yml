@@ -6,7 +6,7 @@ on:
       rom_url:
         description: 'ROM Dowload link'
         required: true
-        default: ''
+        default: 'Dowload link'
 
 jobs:
   Extract boot:
